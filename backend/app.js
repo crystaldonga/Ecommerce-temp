@@ -1,6 +1,6 @@
 const express = require("express");
 const app= express();
-const connectdatabase = require("./config/database")
+//const connectdatabase = require("./config/database")
 const dotenv = require("dotenv")
 const Product = require("./Models/ProductModels")
 const updateStock=require("./Models/updateStock")
@@ -11,7 +11,7 @@ const Order =require("./Models/orderModel")
 if (process.env.NODE_ENV !== "PRODUCTION") {
     require("dotenv").config({ path: "backend/config/config.env" });
   }
-//dotenv.config({path:"./config/config.env"})
+dotenv.config({path:"./config/config.env"})
 const cookieParser = require("cookie-parser")
 const {auth,authorization }= require("./Middleware/auth")
 const sendEmail = require("./utils/sendEmail")
@@ -23,30 +23,30 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const path = require("path")
 
 app.use(cookieParser())
-connectdatabase()
+//connectdatabase()
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(fileUpload())
 app.use(express.static(path.join(__dirname,"../frontend/build")))
 app.use(express.json())
 
-cloudinary.config({
-    cloud_name:process.env.CLOUDINARY_NAME,
-    api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:process.env.CLOUDINARY_API_SECRET
+// cloudinary.config({
+//     cloud_name:process.env.CLOUDINARY_NAME,
+//     api_key:process.env.CLOUDINARY_API_KEY,
+//     api_secret:process.env.CLOUDINARY_API_SECRET
     
 
 
-})
+// })
 //console.log(cloud_name)
 // app.get("*",(req,res)=>{
 //     res.sendFile(path.resolve(__dirname,"../frontend/build/index.html"))
 // })
 
 //uncaught error
-process.on("uncaughtException",(e)=>{
-    console.log(`Error : ${e.message}`);
-    console.log(`uncaught error`);
-})
+// process.on("uncaughtException",(e)=>{
+//     console.log(`Error : ${e.message}`);
+//     console.log(`uncaught error`);
+// })
 
 //create the product--admin
 app.post("/admin/product/new",auth,authorization,catchAsyncError(async(req,res,next)=>{
@@ -185,38 +185,40 @@ app.delete("/admin/product/:id",auth,authorization,catchAsyncError(async(req,res
     })
 }))
 
-const server=app.listen(process.env.PORT,(()=>{
-    console.log("listing....")
-}))
+// const server=app.listen(process.env.PORT,(()=>{
+//     console.log("listing....")
+// }))
 //console.log(youtube)
 //authentication
 app.post("/register",catchAsyncError(async(req,res,next)=>{
     console.log("hy")
-    //console.log(process.env.CLOUDINARY_NAME)
+    console.log(process.env.CLOUDINARY_NAME)
    // console.log(req.body.avatar)
     console.log(req.body)
     let myCloud;
     try{
-     myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-        folder: "avatars",
-        width: 150,
-        crop: "scale",
-      });
+         myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatars",
+            width: 150,
+            crop: "scale",
+          });
+        
     }catch(e){
       console.log(e)
     }
      // console.log(JSON.stringify(myCloud))
+     console.log(myCloud)
     const {name,email,password} = req.body;
     const user = await User.create({
         name,email,password,
         avatar:{
             public_id:myCloud.public_id,
             url:myCloud.secure_url
-            // public_id:"sample",
-            // url:"_url"
+            //  public_id:"sample",
+            //  url:"_url"
         }
     });
-    
+    console.log("gnnnn")
    // token creation
    const token  = user.getJWTToken();
    console.log(token);
@@ -710,15 +712,15 @@ app.get("*", (req, res) => {
 
 
 //unhandle promise rejection
-process.on("unhandledRejection",(e)=>{
-    console.log(`Error : ${e.message}`);
-    console.log("shutting down the server due to unhandled Promise Rejection");
+// process.on("unhandledRejection",(e)=>{
+//     console.log(`Error : ${e.message}`);
+//     console.log("shutting down the server due to unhandled Promise Rejection");
 
-    server.close(()=>{
-        process.exit(1)
-    });
+//     server.close(()=>{
+//         process.exit(1)
+//     });
 
-})
+// })
 // app.listen(5000,()=>{
 //     console.log("listing...")
 // })
