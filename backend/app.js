@@ -26,7 +26,7 @@ app.use(cookieParser())
 //connectdatabase()
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(fileUpload())
-app.use(express.static(path.join(__dirname,"../frontend/build")))
+//app.use(express.static(path.join(__dirname,"../frontend/build")))
 app.use(express.json())
 
 // cloudinary.config({

@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js",
-    "client": "npm install --prefix frontend && npm run build --prefix frontend"
+    "frontend": "npm start --prefix ./frontend",
+    "dev": "nodemon backend/server.js"
+   
   },
   "keywords": [],
   "author": "",
